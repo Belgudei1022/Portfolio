@@ -3,4 +3,8 @@
 
 body {
   font-family: "ZCOOL XiaoWei", sans-serif;
+  overflow-x: hidden;
+}
+.perspective {
+  perspective: 2200px;
 }

@@ -1,38 +1,33 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-
 const HeroSection = () => {
   const textVariants = {
-    hidden: { x: "0vw" }, // Start fully offscreen to the right (viewport width)
+    hidden: { x: "0vw" },
     visible: {
-      x: "-2000%", // Move further left to account for full content width
+      x: "-2000%",
       transition: {
         type: "tween",
         ease: "linear",
-        duration: 200, // Adjust speed as needed
-        repeat: Infinity, // Repeat infinitely
-        repeatType: "loop" as const, // Seamless loop
+        duration: 200,
+        repeat: Infinity,
+        repeatType: "loop" as const,
       },
     },
   };
 
   return (
-    <div className="w-full min-h-screen overflow-x-hidden ">
+    <div className="w-full min-h-screen flex flex-col overflow-x-hidden">
       <motion.div
         className="flex whitespace-nowrap"
         variants={textVariants}
         initial="hidden"
         animate="visible">
-        {Array(100)
-          .fill(0)
-          .map((_, index) => (
-            <div key={index} className="flex gap-[10px] mx-10">
-              <p className="text-[150px] text-white font-">
-                WELCOME TO MY PORTFOLIO
-              </p>
-            </div>
-          ))}
+        {Array.from({ length: 20 }).map((_, index) => (
+          <span key={index} className="text-[150px] text-white mx-10">
+            WELCOME TO MY PORTFOLIO
+          </span>
+        ))}
       </motion.div>
     </div>
   );

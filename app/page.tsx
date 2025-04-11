@@ -1,123 +1,66 @@
 "use client";
+
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
-
-// Define Locomotive Scroll type (simplified, adjust based on actual library)
-interface LocomotiveScrollInstance {
-  el: HTMLElement;
-  smooth: boolean;
-  destroy: () => void;
-  update: () => void;
-  scrollTo: (
-    target: number | string | HTMLElement,
-    options?: { duration?: number; disableLerp?: boolean }
-  ) => void;
-  on?: (event: string, callback: () => void) => void;
-  scroll: {
-    instance: {
-      scroll: {
-        y: number;
-      };
-    };
-  };
-}
+import CertificateSection from "@/components/CertificateSection";
+import AdvantagesSection from "@/components/AdvantagesSection";
+import ContactSection from "@/components/ContactSection";
+import LocomotiveScroll from "locomotive-scroll";
 
 export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const boxRef = useRef<HTMLDivElement>(null);
-  const locomotiveScrollRef = useRef<LocomotiveScrollInstance | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const locoScrollRef = useRef<LocomotiveScroll | null>(null);
 
-  // Initialize Locomotive Scroll
-  useEffect(() => {
-    let mounted = true;
+  // useEffect(() => {
+  //   let isMounted = true;
 
-    const initializeLocomotiveScroll = async () => {
-      const LocomotiveScroll = (await import("locomotive-scroll")).default;
-      const scrollContainer = containerRef.current;
-      if (scrollContainer && mounted) {
-        locomotiveScrollRef.current = new LocomotiveScroll({
-          el: scrollContainer,
-          smooth: true,
-        }) as unknown as LocomotiveScrollInstance;
+  //   const initScroll = async () => {
+  //     if (!scrollRef.current || !isMounted) return;
 
-        // Sync with GSAP ScrollTrigger after initialization
-        ScrollTrigger.scrollerProxy(scrollContainer, {
-          scrollTop(value) {
-            return arguments.length
-              ? locomotiveScrollRef.current?.scrollTo(value as number, {
-                  duration: 0,
-                  disableLerp: true,
-                })
-              : locomotiveScrollRef.current?.scroll.instance.scroll.y;
-          },
-          getBoundingClientRect() {
-            return {
-              top: 0,
-              left: 0,
-              width: window.innerWidth,
-              height: window.innerHeight,
-            };
-          },
-          pinType: scrollContainer.style.transform ? "transform" : "fixed",
-        });
+  //     const scroll = new LocomotiveScroll({
+  //       el: scrollRef.current,
+  //       smooth: true,
+  //       multiplier: 1,
+  //       lerp: 0.06,
+  //       smartphone: { smooth: true },
+  //       tablet: { smooth: true, breakpoint: 1024 },
+  //     });
 
-        if (locomotiveScrollRef.current) {
-          locomotiveScrollRef.current.on?.("scroll", ScrollTrigger.update);
-          ScrollTrigger.refresh();
-        }
-        ScrollTrigger.refresh();
-      } else {
-        console.error("Scroll container not found or component unmounted!");
-      }
-    };
+  //     locoScrollRef.current = scroll;
 
-    initializeLocomotiveScroll();
+  //     // Cleanup function
+  //     return () => {
+  //       if (locoScrollRef.current) {
+  //         locoScrollRef.current.destroy();
+  //         locoScrollRef.current = null;
+  //       }
+  //     };
+  //   };
 
-    return () => {
-      mounted = false;
-      if (locomotiveScrollRef.current) {
-        locomotiveScrollRef.current.destroy();
-        locomotiveScrollRef.current = null;
-      }
-    };
-  }, []);
+  //   initScroll();
 
-  // GSAP Animation with ScrollTrigger
-  useGSAP(
-    () => {
-      gsap.registerPlugin(ScrollTrigger);
-
-      const trigger = ScrollTrigger.create({
-        trigger: boxRef.current, 
-        scroller: containerRef.current,
-        start: "top top", 
-        end: "+=1000px", 
-        pin: true,
-        markers: process.env.NODE_ENV === "development", 
-      });
-
-      return () => {
-        trigger.kill(); // Cleanup ScrollTrigger
-      };
-    },
-    { scope: containerRef } // Scope animations to the container
-  );
+  //   // Cleanup on unmount
+  //   return () => {
+  //     isMounted = false;
+  //     if (locoScrollRef.current) {
+  //       locoScrollRef.current.destroy();
+  //     }
+  //   };
+  // }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full min-h-screen h-fit bg-[#101010] relative"
-      data-scroll-container>
-      <div className="w-full h-full bg-[repeating-linear-gradient(to_right,_#202020_0px,_#202020_1px,_#101010_1px,_#101010_250px)] mx-auto flex flex-col gap-[50px]">
+    <div className="w-full min-h-screen h-fit bg-[#101010] relative">
+      <div
+        ref={scrollRef}
+        data-scroll-container
+        className="w-full h-full bg-[repeating-linear-gradient(to_right,_#202020_0px,_#202020_1px,_#101010_1px,_#101010_250px)] mx-auto flex flex-col gap-[50px]">
         <HeroSection />
-        <div ref={boxRef} className="box-c">
-          <AboutSection />
-        </div>
-        <div className="w-full min-h-screen" /> {/* Spacer */}
+        <AboutSection />
+        <div className="w-full min-h-screen"></div>
+        <CertificateSection />
+        <AdvantagesSection />
+        <ContactSection />
       </div>
     </div>
   );
