@@ -21,7 +21,7 @@ const AboutSection = () => {
       end: "bottom top center",
       pin: true,
       scrub: true,
-      scroller: document.querySelector("[data-scroll-container]"), // Use scrollerProxy
+      // scroller: document.querySelector("[data-scroll-container]"), // Use scrollerProxy
     });
 
     const flex = element.querySelector(".outside");
@@ -44,7 +44,8 @@ const AboutSection = () => {
               start: "top 80%",
               end: "top 20%",
               scrub: true,
-              scroller: document.querySelector("[data-scroll-container]"), // Use scrollerProxy
+              markers: true,
+              // scroller: document.querySelector("[data-scroll-container]"), // Use scrollerProxy
             },
           }
         );
